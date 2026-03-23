@@ -1,0 +1,127 @@
+## Titre et intro
+
+**Titre :** Créer des applications Python avec Microsoft Graph et l’authentification « app-only » [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Ce tutoriel t’explique comment créer une appli console Python qui utilise l’API Microsoft Graph avec une authentification « app-only » (client credentials), pratique pour des services en arrière-plan ou des applis qui accèdent aux données de tous les utilisateurs d’une organisation. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Note : Pour un accès au nom d’un utilisateur (delegated), voir le tutoriel « user (delegated) authentication ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Dans ce tutoriel, tu vas notamment : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+- Lister les utilisateurs (User.List). [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Astuce : Tu peux aussi cloner le repo GitHub et suivre le README. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+***
+
+## Prérequis
+
+Avant de commencer, tu dois avoir Python et pip installés sur ta machine de dev. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Tu dois aussi avoir un compte professionnel ou scolaire Microsoft avec le rôle Administrateur général. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+Si tu n’as pas de tenant Microsoft 365, tu peux en obtenir un via le Microsoft 365 Developer Program ou utiliser un essai d’un mois / un abonnement Microsoft 365. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Note : Le tuto a été écrit avec Python 3.10.4 et pip 20.0.2, d’autres versions peuvent marcher mais n’ont pas été testées. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+***
+
+## Enregistrer l’application pour l’authentification app-only
+
+Tu enregistres une application qui supporte le flux d’identification « client credentials ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+1. Va sur le portail Microsoft Entra admin center et connecte-toi avec un compte Administrateur général. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+2. Clique sur Microsoft Entra ID > Identity > Applications > App registrations. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+3. Clique sur « New registration », donne un nom (ex. `Graph App-Only Auth Tutorial`). [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+4. Mets « Supported account types » à « Accounts in this organizational directory only ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+5. Laisse « Redirect URI » vide. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+6. Clique sur « Register ». Sur la page Overview de l’app, copie l’Application (client) ID et le Directory (tenant) ID, tu en auras besoin après. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+7. Va dans « API permissions ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+8. Supprime la permission par défaut User.Read. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+9. Clique sur « Add a permission » > Microsoft Graph. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+10. Choisis « Application permissions ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+11. Coche User.Read.All, puis « Add permissions ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+12. Clique sur « Grant admin consent for … » puis « Yes » pour donner le consentement admin. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+13. Va dans « Certificates and secrets » > « New client secret ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+14. Donne une description, une durée, puis « Add ». [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+15. Copie la valeur du secret (elle ne sera plus affichée ensuite). [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Note : Contrairement à l’authentification déléguée, ici tu configures les permissions Graph sur l’enregistrement d’app car le flux client credentials s’appuie dessus. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+***
+
+## Créer l’application console Python
+
+1. Crée un fichier `main.py` et mets : `print('Hello world!')`. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+2. Lance `python3 main.py` et vérifie que « Hello world! » s’affiche. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+***
+
+## Installer les dépendances
+
+Tu ajoutes : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+- Azure Identity (lib Python) pour obtenir les tokens d’accès. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+- Microsoft Graph SDK pour Python (preview) pour appeler Microsoft Graph. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Installe-les : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+- `python3 -m pip install azure-identity`  
+- `python3 -m pip install msgraph-sdk`  
+
+***
+
+## Charger la configuration de l’application
+
+1. Crée un fichier `config.cfg` dans le même dossier que `main.py` : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+   ```ini
+   [azure]
+   clientId = YOUR_CLIENT_ID_HERE
+   clientSecret = YOUR_CLIENT_SECRET_HERE
+   tenantId = YOUR_TENANT_ID_HERE
+   ```  
+2. Remplace les valeurs par : clientId = ID client de l’app, clientSecret = secret client, tenantId = ID du tenant. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Astuce : Tu peux mettre ces valeurs dans un `config.dev.cfg` séparé. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+***
+
+## Concevoir l’appli (menu console)
+
+1. Crée `graph.py` et ajoute : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+   ```python
+   # Temporary placeholder
+   class Graph:
+       def __init__(self, config):
+           self.settings = config
+   ```  
+   C’est un placeholder; tu implémenteras la classe plus tard. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+2. Remplace tout le contenu de `main.py` par le code qui : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+   - Imprime « Python Graph App-Only Tutorial ».  
+   - Charge `config.cfg` et `config.dev.cfg`.  
+   - Crée un objet `Graph`.  
+   - Affiche un menu :  
+     - 0. Exit  
+     - 1. Display access token  
+     - 2. List users  
+     - 3. Make a Graph call  
+   - Lit le choix utilisateur et appelle la fonction correspondante.  
+
+3. Ajoute les fonctions placeholder à la fin : [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+   ```python
+   async def display_access_token(graph: Graph):
+       # TODO
+       return
+
+   async def list_users(graph: Graph):
+       # TODO
+       return
+
+   async def make_graph_call(graph: Graph):
+       # TODO
+       return
+   ```  
+
+4. Ajoute `asyncio.run(main())` à la fin pour lancer le programme. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+Ce code met en place un menu basique et lit le choix dans la CLI. [learn.microsoft](https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad)
+
+***
+
