@@ -1,0 +1,7 @@
+Python officiel Microsoft pour le OAuth2  :  ('https://learn.microsoft.com/en-us/graph/tutorials/python-app-only?tabs=aad')
+
+
+Comment l'auth fonctionne   :    ('https://learn.microsoft.com/en-us/graph/auth-v2-service?tabs=http')
+
+
+Comment trouver Tenant ID   :    ('https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant')

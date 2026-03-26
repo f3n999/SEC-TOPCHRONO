@@ -1,0 +1,179 @@
+# Regles de detection phishing - Configuration YAML
+# Modifier les poids, activer/desactiver les regles sans toucher au code.
+
+scoring:
+  haute: 40
+  moyenne: 20
+  faible: 5
+
+# Domaines de confiance (whitelist) - jamais flag comme suspect
+whitelist:
+  domains:
+    - "topchrono.com"
+    - "microsoft.com"
+    - "office365.com"
+    - "office.com"
+    - "outlook.com"
+    - "google.com"
+    - "gmail.com"
+
+# Domaines bloques (blacklist) - toujours flag
+blacklist:
+  domains: []
+
+# TLDs suspects
+suspicious_tlds:
+  - "xyz"
+  - "top"
+  - "buzz"
+  - "click"
+  - "loan"
+  - "work"
+  - "gq"
+  - "tk"
+  - "ml"
+  - "cf"
+  - "ga"
+  - "ru"
+  - "cn"
+
+# Services d'URL raccourcies
+url_shorteners:
+  - "bit.ly"
+  - "tinyurl.com"
+  - "t.co"
+  - "goo.gl"
+  - "is.gd"
+  - "buff.ly"
+  - "ow.ly"
+  - "tiny.cc"
+  - "lnkd.in"
+
+# Extensions de fichiers dangereuses
+dangerous_extensions:
+  - ".exe"
+  - ".bat"
+  - ".scr"
+  - ".vbs"
+  - ".js"
+  - ".ps1"
+  - ".cmd"
+  - ".msi"
+  - ".hta"
+  - ".wsf"
+  - ".cpl"
+  - ".pif"
+  - ".reg"
+
+# Mots-cles de phishing par categorie
+keywords:
+  urgence:
+    - "urgent"
+    - "action requise"
+    - "immediatement"
+    - "dernier delai"
+    - "expire bientot"
+    - "dans les 24 heures"
+    - "repondez vite"
+    - "ne tardez pas"
+    - "temps limite"
+    - "agissez maintenant"
+    - "sans delai"
+    - "avant minuit"
+    - "derniere chance"
+    - "depechez-vous"
+
+  compte_compromis:
+    - "compte bloque"
+    - "compte suspendu"
+    - "acces refuse"
+    - "activite suspecte"
+    - "connexion inhabituelle"
+    - "votre compte sera ferme"
+    - "securite compromise"
+    - "compte desactive"
+    - "tentative de connexion"
+    - "acces non autorise"
+    - "compte pirate"
+    - "violation de securite"
+    - "suspension imminente"
+
+  donnees_personnelles:
+    - "mot de passe"
+    - "identifiants"
+    - "coordonnees bancaires"
+    - "numero de carte"
+    - "code secret"
+    - "code pin"
+    - "informations personnelles"
+    - "donnees confidentielles"
+    - "numero de securite sociale"
+    - "piece d identite"
+    - "rib bancaire"
+    - "cvv"
+    - "cryptogramme"
+
+  appels_action:
+    - "cliquez ici"
+    - "cliquez maintenant"
+    - "verifiez"
+    - "confirmer"
+    - "valider maintenant"
+    - "mettre a jour"
+    - "reinitialisez"
+    - "connectez-vous ici"
+    - "suivez ce lien"
+    - "ouvrir le document"
+    - "telechargez maintenant"
+
+  gains_loterie:
+    - "vous avez gagne"
+    - "felicitations"
+    - "cadeau gratuit"
+    - "offre exclusive"
+    - "tirage au sort"
+    - "loterie"
+    - "recompense"
+    - "bonus exceptionnel"
+    - "iphone gratuit"
+    - "cheque cadeau"
+
+  finance:
+    - "virement urgent"
+    - "transfert bancaire"
+    - "remboursement en attente"
+    - "facture impayee"
+    - "paiement refuse"
+    - "dette en cours"
+    - "huissier"
+    - "mise en demeure"
+    - "recouvrement"
+    - "investissement garanti"
+
+  usurpation:
+    - "service client"
+    - "support technique"
+    - "votre banque"
+    - "administration fiscale"
+    - "police nationale"
+    - "gendarmerie"
+    - "interpol"
+    - "securite sociale"
+    - "assurance maladie"
+
+  anglais:
+    - "verify your account"
+    - "confirm your identity"
+    - "click here immediately"
+    - "reset password"
+    - "unusual activity"
+    - "account suspended"
+    - "dear customer"
+    - "dear user"
+
+# Seuils de detection
+thresholds:
+  keywords_high: 3    # Nombre de mots-cles pour severite haute
+  keywords_medium: 2  # Nombre de mots-cles pour severite moyenne
+  domain_hyphens: 2   # Max tirets dans un domaine
+  domain_digits: 3    # Max chiffres dans un domaine

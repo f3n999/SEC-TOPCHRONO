@@ -1,6 +1,4 @@
 __pycache__/
-.claude/
-**/worktrees/
 *.pyc
 .env
 config.cfg

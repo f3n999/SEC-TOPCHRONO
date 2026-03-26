@@ -1,0 +1,29 @@
+# Secrets
+.env
+config.cfg
+config.dev.cfg
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Data & Reports
+data/
+*.csv
+*.json
+!config/rules.yaml
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
