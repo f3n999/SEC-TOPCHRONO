@@ -1,0 +1,5 @@
+config/secrets.yaml
+reports/
+__pycache__/
+*.pyc
+.env

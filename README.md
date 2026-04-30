@@ -1,4 +1,147 @@
-# 🛡️ Phishing Detection Agent
+# SEC-TOPCHRONO — Analyseur de Phishing
+
+**Détection de phishing par analyse locale de fichiers `.eml` — Sans Outlook, sans Graph API**
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
+
+---
+
+## V5 — Démarrage rapide
+
+### Installation
+
+```bash
+git clone https://github.com/f3n999/SEC-TOPCHRONO.git
+cd SEC-TOPCHRONO
+pip install -r V5/requirements.txt
+```
+
+### Configuration des clés API
+
+Crée `V5/config/secrets.yaml` (déjà dans `.gitignore`) :
+
+```yaml
+virustotal_api_key: "TA_CLE_VIRUSTOTAL"
+urlscan_api_key:    "TA_CLE_URLSCAN"
+```
+
+- VirusTotal : compte gratuit → [virustotal.com](https://www.virustotal.com)
+- URLScan.io : compte gratuit → [urlscan.io](https://urlscan.io)
+
+Sans clés, l'analyse locale fonctionne — VT/URLScan sont skippés.
+
+### Utilisation
+
+```bash
+# Mode interactif (te demande le fichier)
+python V5/analyze.py
+
+# Analyse directe
+python V5/analyze.py email_suspect.eml
+
+# Export JSON
+python V5/analyze.py email.eml --json
+
+# Sauvegarder le rapport dans V5/reports/
+python V5/analyze.py email.eml --save
+```
+
+---
+
+## Ce que V5 détecte
+
+| Règle | Description | Sévérité |
+|---|---|---|
+| `domain_mismatch` | URL dans le corps ≠ domaine expéditeur | Haute |
+| `spf_fail` / `dkim_fail` / `dmarc_fail` | Authentification email échouée | Haute |
+| `homoglyph_ascii` | Domaine imite une marque (paypa1.com) | Haute |
+| `homoglyph_unicode` | Caractères Unicode confusables | Haute |
+| `reply_to_mismatch` | Reply-To différent du From | Haute |
+| `ip_url` | URL avec adresse IP directe | Haute |
+| `dangerous_attachment` | Pièce jointe .exe .ps1 .vbs... | Haute |
+| `keywords_high` | 3+ mots-clés phishing détectés | Haute |
+| `suspicious_tld` | TLD suspect (.xyz .tk .us .top...) | Moyenne |
+| `shortened_url` | Raccourcisseur d'URL (bit.ly...) | Moyenne |
+
+### Niveaux de risque
+
+| Score | Niveau | Action |
+|---|---|---|
+| 0 – 30 | LOW | Email probablement légitime |
+| 31 – 60 | MEDIUM | Vérification humaine recommandée |
+| 61 – 100 | HIGH | Phishing probable — ne pas cliquer |
+
+---
+
+## Architecture V5
+
+```
+V5/
+├── analyze.py              ← Point d'entrée CLI
+├── requirements.txt
+├── config/
+│   ├── rules.yaml          ← Règles, scores, whitelist/blacklist, keywords
+│   └── secrets.yaml        ← Clés API (gitignore — à créer manuellement)
+└── src/
+    ├── parser/
+    │   └── eml_parser.py   ← Parse .eml (eml-parser GOVCERT + fallback stdlib)
+    ├── detection/
+    │   ├── engine.py       ← Orchestrateur — whitelist partielle (fix V4)
+    │   └── rules/
+    │       ├── urls.py          ← URLs + règle domain_mismatch (tldextract)
+    │       ├── homoglyphs.py    ← ASCII + Unicode (confusable_homoglyphs)
+    │       ├── auth_headers.py  ← SPF / DKIM / DMARC
+    │       ├── sender.py        ← Domaine expéditeur
+    │       ├── keywords.py      ← Mots-clés phishing
+    │       └── attachments.py   ← Pièces jointes dangereuses
+    ├── scoring/
+    │   └── risk_scorer.py  ← Score 0-100, niveaux LOW/MEDIUM/HIGH
+    ├── report.py           ← Rapport coloré (rich)
+    └── options/
+        ├── secrets.py      ← Loader config/secrets.yaml
+        ├── virustotal.py   ← API VirusTotal v3 (automatique)
+        └── urlscan.py      ← API URLScan.io (automatique)
+```
+
+---
+
+## Fix V4 → V5
+
+**Bug V4** : expéditeur whitelisté = analyse complète stoppée, URLs jamais vérifiées.
+Un mail de `@partenaire-connu.fr` avec un lien `mableflyfull.us` passait sans alerte.
+
+**Fix V5** : whitelist = bonus `-20 pts` sur le score. Les URLs sont **toujours** analysées.
+
+---
+
+## Dépendances
+
+```
+eml-parser>=1.14.0           # Parser EML (GOVCERT-LU)
+tldextract>=3.4.0            # Extraction domaine/TLD fiable
+confusable-homoglyphs>=3.0.0 # Homoglyphes Unicode
+pyyaml>=6.0
+loguru>=0.7.0
+rich>=13.0.0                 # Interface terminal colorée
+requests>=2.28.0             # VirusTotal + URLScan
+```
+
+---
+
+## Versions
+
+| Version | Description |
+|---|---|
+| V3 | Agent Microsoft Graph API — scan boîtes Outlook |
+| V5 | Analyseur local `.eml` — autonome, VT + URLScan intégrés |
+
+---
+
+Mohamed Elnaggar — TopChrono IT
+
+---
+
+# 🛡️ Phishing Detection Agent (V3)
 
 **Analyse automatisée des emails via Microsoft Graph API — Détection heuristique en temps réel**
 

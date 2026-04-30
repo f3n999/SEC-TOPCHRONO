@@ -1,0 +1,153 @@
+# Règles de détection phishing V5
+# Modifiez les poids et listes sans toucher au code.
+
+scoring:
+  haute:   40
+  moyenne: 20
+  faible:   5
+
+# Domaines de confiance — le sender est trusted MAIS les URLs sont quand même analysées (fix V5)
+whitelist:
+  domains:
+    - "topchrono.com"
+    - "topchrono.fr"
+    - "microsoft.com"
+    - "office365.com"
+    - "office.com"
+    - "outlook.com"
+    - "google.com"
+    - "gmail.com"
+
+# Domaines bloqués — flag immédiat
+blacklist:
+  domains: []
+
+# TLDs suspects
+suspicious_tlds:
+  - "xyz"
+  - "top"
+  - "buzz"
+  - "click"
+  - "loan"
+  - "work"
+  - "gq"
+  - "tk"
+  - "ml"
+  - "cf"
+  - "ga"
+  - "ru"
+  - "cn"
+  - "us"       # Ajout V5 — .us utilisé dans le mail S.T.A.R phishing
+  - "info"
+  - "online"
+  - "site"
+  - "live"
+
+# Services de raccourcissement d'URL
+url_shorteners:
+  - "bit.ly"
+  - "tinyurl.com"
+  - "t.co"
+  - "goo.gl"
+  - "is.gd"
+  - "buff.ly"
+  - "ow.ly"
+  - "tiny.cc"
+  - "lnkd.in"
+  - "rb.gy"
+  - "cutt.ly"
+
+# Extensions dangereuses
+dangerous_extensions:
+  - ".exe"
+  - ".bat"
+  - ".scr"
+  - ".vbs"
+  - ".js"
+  - ".ps1"
+  - ".cmd"
+  - ".msi"
+  - ".hta"
+  - ".wsf"
+  - ".cpl"
+  - ".pif"
+  - ".reg"
+  - ".lnk"
+
+# Mots-clés de phishing
+keywords:
+  urgence:
+    - "urgent"
+    - "action requise"
+    - "immédiatement"
+    - "dernier délai"
+    - "expire bientot"
+    - "dans les 24 heures"
+    - "expiry"
+    - "temps limité"
+    - "agissez maintenant"
+    - "sans délai"
+    - "dernière chance"
+    - "awaiting approval"   # Ajout V5
+    - "review required"     # Ajout V5
+
+  compte_compromis:
+    - "compte bloqué"
+    - "compte suspendu"
+    - "accès refusé"
+    - "activité suspecte"
+    - "connexion inhabituelle"
+    - "votre compte sera fermé"
+    - "sécurité compromise"
+    - "tentative de connexion"
+    - "accès non autorisé"
+
+  donnees_personnelles:
+    - "mot de passe"
+    - "identifiants"
+    - "coordonnées bancaires"
+    - "numéro de carte"
+    - "code secret"
+    - "code pin"
+    - "informations personnelles"
+    - "données confidentielles"
+    - "cvv"
+
+  appels_action:
+    - "cliquez ici"
+    - "cliquez maintenant"
+    - "vérifiez"
+    - "confirmer"
+    - "valider maintenant"
+    - "mettre à jour"
+    - "réinitialisez"
+    - "suivez ce lien"
+    - "ouvrir le document"
+    - "review"              # Ajout V5
+
+  finance:
+    - "virement urgent"
+    - "transfert bancaire"
+    - "remboursement en attente"
+    - "facture impayée"
+    - "paiement refusé"
+    - "funding"             # Ajout V5
+    - "nda"                 # Ajout V5 — utilisé comme leurre
+
+  anglais:
+    - "verify your account"
+    - "confirm your identity"
+    - "click here immediately"
+    - "reset password"
+    - "unusual activity"
+    - "account suspended"
+    - "dear customer"
+    - "dear user"
+    - "shared with you"     # Ajout V5
+
+# Seuils
+thresholds:
+  keywords_high:   3
+  keywords_medium: 2
+  domain_hyphens:  2
+  domain_digits:   3

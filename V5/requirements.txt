@@ -1,0 +1,11 @@
+# ── Core ──────────────────────────────────────────────────────────────────────
+eml-parser>=1.14.0          # Parser EML (GOVCERT-LU) — extraction complète
+tldextract>=3.4.0           # Extraction domaine/TLD fiable (règle domain_mismatch)
+confusable-homoglyphs>=3.0.0 # Détection homoglyphes Unicode
+pyyaml>=6.0                 # Config rules.yaml
+loguru>=0.7.0               # Logs
+rich>=13.0.0                # Rapport coloré dans le terminal
+
+# ── Options (décommentez selon besoin) ───────────────────────────────────────
+requests>=2.28.0            # Requis pour VirusTotal + URLScan
+# checkdmarc>=8.0.0         # Vérification DMARC/SPF en live (DNS)
